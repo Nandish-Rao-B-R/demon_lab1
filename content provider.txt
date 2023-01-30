@@ -1,0 +1,189 @@
+activity.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+tools:context=".MainActivity">
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="date" />
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/txt_date"/>
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="note" />
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/txt_note"/>
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="insert"
+    android:id="@+id/btn_insert"/>
+
+
+
+</LinearLayout>
+
+manifestfile.xml
+
+ <provider
+            android:authorities="com.example.notesprovider"
+            android:name=".NotesProvider"
+            android:exported="true"/>
+
+
+Mainactivity.java
+
+package com.example.notedate;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    EditText date,notes;
+    Button insert;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        date=(EditText) findViewById(R.id.txt_date);
+        notes=(EditText)findViewById(R.id.txt_note);
+        insert=(Button)findViewById(R.id.btn_insert);
+        insert.setOnClickListener(this);
+}
+
+    @Override
+    public void onClick(View v) {
+        String sdate= date.getText().toString();
+        String snotes=notes.getText().toString();
+        if(v.equals(insert)){
+
+            ContentValues cv = new ContentValues();
+            cv.put("notes_date",sdate);
+            cv.put("notes_content",snotes);
+            ContentResolver cr=getContentResolver();
+            cr.insert(Uri.parse("content://com.example.notesprovider/notes"),cv);
+            Toast.makeText(getApplicationContext(), "data inserted", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+}
+
+Mydatabase.java
+
+package com.example.notedate;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+public class MyDataBase extends SQLiteOpenHelper {
+    public static String DATABASE_NAME="notesprovider.db";
+    public static String TABLE_NAME="notes";
+
+    public MyDataBase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("create table notes(notes_date TEXT,notes_content TEXT)");
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+}
+
+notesprovider.java
+package com.example.notedate;
+
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.hardware.biometrics.BiometricManager;
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+public class NotesProvider extends ContentProvider {
+    MyDataBase d;
+    SQLiteDatabase db;
+    @Override
+    public boolean onCreate() {
+        d=new MyDataBase(getContext(),MyDataBase.DATABASE_NAME,null,1);
+
+        return (d==null) ? false:true;
+    }
+
+    @Nullable
+    @Override
+    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+        Cursor c = null;
+        db=d.getReadableDatabase();
+        c=db.query(MyDataBase.TABLE_NAME,strings,s,strings1,s1,null,null);
+        return c;
+    }
+
+    @Nullable
+    @Override
+    public String getType(@NonNull Uri uri) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues cv) {
+        db=d.getWritableDatabase();
+        db.insert(MyDataBase.TABLE_NAME,null,cv);
+        db.close();
+        return null;
+    }
+
+    @Override
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        return 0;
+    }
+
+    @Override
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        return 0;
+    }
+}
+
+
+
+
+

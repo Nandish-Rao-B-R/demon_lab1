@@ -1,0 +1,72 @@
+i) Create an application to design a Visiting Card. The Visiting card should have a company logo at the top right corner. 
+The company name should be displayed in Capital letters, aligned to the center. Information like the name of the employee, 
+job title, phone number, address, email,fax and the website address is to be displayed. Insert a horizontal line between the job title and the phone number.
+
+////activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#E6DAC8E6">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"      >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dr.AIT "
+            android:textColor="@color/black"
+            android:textSize="80dp" />
+
+        <ImageView
+            android:layout_width="98dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/drait" />
+    </LinearLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/black" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pallavi S"
+        android:textSize="35dp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="1DA20CS420"
+        android:id="@+id/textView4"
+        android:textSize="25dp"
+        android:textColor="@color/black"        />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Ph:9875654321"
+        android:textSize="25dp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Address:Bengaluru"
+        android:textSize="25dp"
+        android:textColor="@color/black" />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Email:1da20cs420.cs@drait.edu.in"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+
+</LinearLayout>
