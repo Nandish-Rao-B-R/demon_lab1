@@ -209,5 +209,3 @@ AndroidManifest.xml
 
 </manifest>
 
-Dialog_layout.xml
-
